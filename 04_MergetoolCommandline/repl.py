@@ -87,6 +87,23 @@ class commandline(cmd.Cmd):
 
                 print(result)
 
+    def complete_generate(self, prefix, allcmd, beg, end):
+        params = shlex.split(allcmd[:beg])
+        if len(params) == 1:
+            return [var for var in pynames.generators.__all__ if var.startswith(prefix)]
+        result = ['male', 'female']
+        if len(params) == 2:
+            if params[1] == 'iron_kingdoms':
+                result += self.iron_kingdoms_subclasses
+            elif params[1] == 'elven':
+                result += self.elven_subclasses
+            return [var for var in result if var.startswith(prefix)]
+        if len(params) == 3:
+            return [var for var in result if var.startswith(prefix)]
+
+    def complete_info(self, *args):
+        return self.complete_generate(*args)
+
     def do_exit(self, args):
         return True
 
