@@ -104,6 +104,10 @@ class commandline(cmd.Cmd):
     def complete_info(self, *args):
         return self.complete_generate(*args)
 
+    def complete_language(self, prefix, allcmd, beg, end):
+        result = pynames.LANGUAGE.ALL
+        return [var for var in result if var.startswith(prefix)]
+
     def do_exit(self, args):
         return True
 
