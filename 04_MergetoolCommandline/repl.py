@@ -44,13 +44,46 @@ class commandline(cmd.Cmd):
                     gen_class_name += [k for k in eval(gen_class_name + '__dict__') if k.endswith(NAMEGEN)][0]
 
                 gender = ''
-                if len(params) > 1 and params[-1].lower() in pynames.GENDER.ALL:
+                if len(params) > 1 and params[-1].upper() in pynames.GENDER.__dict__:
                     gender = GENDER_PREFIX + params[-1].upper()
 
                 gen_params = (gender + ', ') if gender else ''
                 gen_params += (LANG_PREFIX + self.lang) if eval(LANG_PREFIX[9:] + self.lang) in eval(gen_class_name + '().languages') else ''
 
-                result = eval(gen_class_name + '().get_name_simple' '(' + gen_params + ')')
+                result = eval(gen_class_name + '().get_name_simple(' + gen_params + ')')
+
+                print(result)
+
+    def do_info(self, args):
+        """Show info"""
+        params = shlex.split(args)
+        if params:
+            if params[0] in pynames.generators.__all__:
+                gen_class_name = 'pynames.generators.' + params[0] + '.'
+                if params[0] == 'iron_kingdoms':
+                    if len(params) > 1 and params[1] in self.iron_kingdoms_subclasses:
+                        gen_class_name += params[1]
+                    else:
+                        gen_class_name += self.iron_kingdoms_subclasses[0]
+                    gen_class_name += FNAMEGEN
+                elif params[0] == 'elven':
+                    if len(params) > 1 and params[1] in self.elven_subclasses:
+                        gen_class_name += params[1]
+                    else:
+                        gen_class_name += self.elven_subclasses[0]
+                    gen_class_name += NAMEGEN
+                else:
+                    gen_class_name += [k for k in eval(gen_class_name + '__dict__') if k.endswith(NAMEGEN)][0]
+
+                if len(params) > 1 and params[-1] == 'language':
+                    print(*eval(gen_class_name + '().languages'))
+                    return
+
+                gender = ''
+                if len(params) > 1 and params[-1].upper() in pynames.GENDER.__dict__:
+                    gender = GENDER_PREFIX[7:] + params[-1].upper()
+
+                result = eval(gen_class_name + '().get_names_number(' + gender + ')')
 
                 print(result)
 
